@@ -60,6 +60,8 @@ module "create_WGSQL1" {
   location            = azurerm_resource_group.rg.location
   vnet_subnet_id      = azurerm_subnet.data-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
+  asg_datatier_id      = azurerm_application_security_group.datatier.id
+
 
   server_name    = "WGSQL1"
   admin_username = var.server_admin_username

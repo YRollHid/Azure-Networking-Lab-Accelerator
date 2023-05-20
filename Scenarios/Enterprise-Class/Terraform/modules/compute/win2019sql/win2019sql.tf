@@ -46,6 +46,12 @@ resource "azurerm_network_interface" "compute" {
   }
 }
 
+resource "azurerm_network_interface_application_security_group_association" "compute" {
+  network_interface_id          = azurerm_network_interface.compute.id
+  application_security_group_id = var.asg_datatier_id 
+  
+}
+
 ####################################### NIC DIAGNOSTIC SETTINGS #######################################
 
 # Use this data source to fetch all available log and metrics categories. We then enable all of them
