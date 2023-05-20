@@ -97,6 +97,8 @@ resource "azurerm_monitor_diagnostic_setting" "compute" {
 
 variable "log_analytics_workspace_id" {}
 
+variable "asg_datatier_id" {}
+
 variable "admin_username" {
   default = "sysadmin"
 }
