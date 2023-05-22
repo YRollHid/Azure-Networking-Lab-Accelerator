@@ -62,7 +62,7 @@ resource "azurerm_network_interface_backend_address_pool_association" "compute" 
 }
 
 resource "azurerm_virtual_machine_extension" "custom_script" {
-  name                       = var.server_name
+  name                       = "CloudShopInstallscript"
   virtual_machine_id         = azurerm_windows_virtual_machine.compute.id
   publisher                  = "Microsoft.Compute"
   type                       = "CustomScriptExtension"
@@ -129,7 +129,7 @@ variable "asg_webtier_id" {}
 variable "backend_address_pool_id" {}
 
 variable "template_base_url" {
-  default = "https://raw.githubusercontent.com/yrollhid/Azure-Networking-Lab-Accelerator/main/Scenarios/Enterprise-Class/"
+  default = "https://raw.githubusercontent.com/YRollHid/Azure-Networking-Lab-Accelerator/main/Scenarios/Enterprise-Class/"
 }
 variable "cloudshopurl" {
   default = "https://cloudworkshop.blob.core.windows.net/enterprise-networking/Cloudshop.zip"
