@@ -52,6 +52,15 @@ resource "azurerm_network_interface_application_security_group_association" "com
   
 }
 
+#Automated Backend Pool Addition > Gem Configuration to add the network interfaces of the VMs to the backend pool.
+resource "azurerm_network_interface_backend_address_pool_association" "compute" {
+  count                   = 1
+  network_interface_id    = azurerm_network_interface.compute.*.id[count.index]
+  ip_configuration_name   = azurerm_network_interface.compute.*.ip_configuration.0.name[count.index]
+  backend_address_pool_id = var.backend_address_pool_id
+
+}
+
 ####################################### NIC DIAGNOSTIC SETTINGS #######################################
 
 # Use this data source to fetch all available log and metrics categories. We then enable all of them
@@ -98,6 +107,8 @@ resource "azurerm_monitor_diagnostic_setting" "compute" {
 variable "log_analytics_workspace_id" {}
 
 variable "asg_webtier_id" {}
+
+variable "backend_address_pool_id" {}
 
 variable "admin_username" {
   default = "sysadmin"

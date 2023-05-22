@@ -97,6 +97,7 @@ module "create_WGWEB1" {
   vnet_subnet_id      = azurerm_subnet.app-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
   asg_webtier_id      = azurerm_application_security_group.webtier.id
+  backend_address_pool_id = azurerm_lb_backend_address_pool.app_lb_backend_address_pool.id
 
   server_name    = "WGWEB1"
   admin_username = var.server_admin_username
@@ -115,6 +116,7 @@ module "create_WGWEB2" {
   vnet_subnet_id      = azurerm_subnet.app-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
   asg_webtier_id      = azurerm_application_security_group.webtier.id
+  backend_address_pool_id = azurerm_lb_backend_address_pool.app_lb_backend_address_pool.id
 
   server_name    = "WGWEB2"
   admin_username = var.server_admin_username
@@ -132,7 +134,7 @@ module "create_WGSQL1" {
   location            = azurerm_resource_group.rg.location
   vnet_subnet_id      = azurerm_subnet.data-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
-  asg_datatier_id      = azurerm_application_security_group.datatier.id
+  asg_datatier_id     = azurerm_application_security_group.datatier.id
 
 
   server_name    = "WGSQL1"
