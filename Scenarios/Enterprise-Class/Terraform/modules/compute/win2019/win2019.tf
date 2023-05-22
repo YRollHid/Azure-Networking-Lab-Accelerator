@@ -52,13 +52,31 @@ resource "azurerm_network_interface_application_security_group_association" "com
   
 }
 
-#Automated Backend Pool Addition > Gem Configuration to add the network interfaces of the VMs to the backend pool.
+# Automated Backend Pool Addition > Gem Configuration to add the network interfaces of the VMs to the backend pool.
 resource "azurerm_network_interface_backend_address_pool_association" "compute" {
   count                   = 1
   network_interface_id    = azurerm_network_interface.compute.*.id[count.index]
   ip_configuration_name   = azurerm_network_interface.compute.*.ip_configuration.0.name[count.index]
   backend_address_pool_id = var.backend_address_pool_id
 
+}
+
+resource "azurerm_virtual_machine_extension" "custom_script" {
+  name                       = var.server_name
+  virtual_machine_id         = azurerm_windows_virtual_machine.compute.id
+  publisher                  = "Microsoft.Compute"
+  type                       = "CustomScriptExtension"
+  type_handler_version       = "1.10"
+  auto_upgrade_minor_version = true
+
+  settings = <<SETTINGS
+    {
+      "fileUris": [
+          "${var.template_base_url}artifacts/deploy-cloudshop.ps1"
+      ],
+      "commandToExecute": "powershell.exe -ExecutionPolicy Bypass -File deploy-cloudshop.ps1 -cloudshopurl ${var.cloudshopurl}"
+    }
+SETTINGS
 }
 
 ####################################### NIC DIAGNOSTIC SETTINGS #######################################
@@ -110,6 +128,12 @@ variable "asg_webtier_id" {}
 
 variable "backend_address_pool_id" {}
 
+variable "template_base_url" {
+  default = "https://raw.githubusercontent.com/yrollhid/Azure-Networking-Lab-Accelerator/main/Scenarios/Enterprise-Class/"
+}
+variable "cloudshopurl" {
+  default = "https://cloudworkshop.blob.core.windows.net/enterprise-networking/Cloudshop.zip"
+}
 variable "admin_username" {
   default = "sysadmin"
 }
