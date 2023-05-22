@@ -74,7 +74,7 @@ resource "azurerm_route_table" "server_route_table" {
   disable_bgp_route_propagation = false
 
   route {
-    name                   = "route_to_firewall"
+    name                   = "AppToInternet"
     address_prefix         = "0.0.0.0/0"
     next_hop_type          = "VirtualAppliance"
     next_hop_in_ip_address = "10.7.1.4"
@@ -82,11 +82,15 @@ resource "azurerm_route_table" "server_route_table" {
 }
 
 # # Associate Route Table to Server Spoke Subnet
-resource "azurerm_subnet_route_table_association" "server_rt_association" {
+resource "azurerm_subnet_route_table_association" "app_rt_association" {
   subnet_id      = azurerm_subnet.app-spoke.id
   route_table_id = azurerm_route_table.server_route_table.id
 }
 
+resource "azurerm_subnet_route_table_association" "data_rt_association" {
+  subnet_id      = azurerm_subnet.data-spoke.id
+  route_table_id = azurerm_route_table.server_route_table.id
+}
 ####################################### SERVER-SPOKE-VNET DIAGNOSTIC SETTINGS #######################################
 
 # Use this data source to fetch all available log and metrics categories. We then enable all of them

@@ -8,10 +8,82 @@ resource "azurerm_network_security_group" "app-nsg" {
   resource_group_name = azurerm_resource_group.server-spoke-rg.name
   location            = azurerm_resource_group.rg.location
 
+  security_rule {
+    name                       = "AllowDataTierInboundTCP1433"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_application_security_group_ids = [azurerm_application_security_group.webtier.id]
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.datatier.id]
+    destination_port_range     = "1433"
+  }
+  security_rule {
+    name                       = "AllowWebTierInboundTCP80"
+    priority                   = 150
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.webtier.id]
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+  }
+  security_rule {
+    name                       = "AllowMgmtInboundWeb3389"
+    priority                   = 200
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.webtier.id]
+    destination_port_range     = "3389"
+    source_address_prefixes    = ["10.7.2.0/25","10.7.5.0/24"]
+  }
+    security_rule {
+    name                       = "AllowMgmtInboundData3389"
+    priority                   = 201
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.datatier.id]
+    destination_port_range     = "3389"
+    source_address_prefixes    = ["10.7.2.0/25","10.7.5.0/24"]
+  }
+  security_rule {
+    name                       = "DenyVNetDataTierInbound"
+    priority                   = 1000
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.datatier.id]
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+  }
+  security_rule {
+    name                       = "DenyVNetWebTierInbound"
+    priority                   = 1050
+    direction                  = "Inbound"
+    access                     = "Deny"
+    protocol                   = "*"
+    source_port_range          = "*"
+    destination_application_security_group_ids = [azurerm_application_security_group.webtier.id]
+    destination_port_range     = "*"
+    source_address_prefix      = "VirtualNetwork"
+  }
+
+
 }
 
 resource "azurerm_subnet_network_security_group_association" "app-subnet" {
   subnet_id                 = azurerm_subnet.app-spoke.id
+  network_security_group_id = azurerm_network_security_group.app-nsg.id
+}
+resource "azurerm_subnet_network_security_group_association" "data-subnet" {
+  subnet_id                 = azurerm_subnet.data-spoke.id
   network_security_group_id = azurerm_network_security_group.app-nsg.id
 }
 

@@ -63,6 +63,20 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
 
   }
 
+  # network_rule_collection {
+  #   name     = "DataTier_Access"
+  #   priority = 220
+  #   action   = "Allow"
+  #   rule {
+  #     name                  = "AllowMSSQL"
+  #     protocols             = ["TCP"]
+  #     source_addresses      = ["10.8.0.0/25"]
+  #     destination_addresses = ["10.8.1.0/25"]
+  #     destination_ports     = ["1433"]
+  #   }
+
+  # }
+
 }
 
 variable "resource_group_name" {}
