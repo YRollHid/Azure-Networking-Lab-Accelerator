@@ -65,7 +65,7 @@ resource "azurerm_virtual_machine_extension" "custom_script" {
       "fileUris": [
           "${var.template_base_url}artifacts/deploy-cloudshop-db.ps1"
       ],
-      "commandToExecute": "powershell.exe -ExecutionPolicy Bypass -File deploy-cloudshop-db.ps1 -dbsource ${var.cloudshopdburl} -sqlconfigurl ${var.cloudshopsqlconfig}"
+      "commandToExecute": "powershell.exe -ExecutionPolicy Bypass -File deploy-cloudshop-db.ps1 -user ${var.admin_username} -password ${var.admin_password} -dbsource ${var.cloudshopdburl} -sqlconfigurl ${var.cloudshopsqlconfig}"
     }
 SETTINGS
 }
