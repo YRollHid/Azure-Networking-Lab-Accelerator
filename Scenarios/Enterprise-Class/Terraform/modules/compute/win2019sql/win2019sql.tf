@@ -52,6 +52,24 @@ resource "azurerm_network_interface_application_security_group_association" "com
   
 }
 
+resource "azurerm_virtual_machine_extension" "custom_script" {
+  name                       = "InstallCloudShopDB"
+  virtual_machine_id         = azurerm_windows_virtual_machine.compute.id
+  publisher                  = "Microsoft.Compute"
+  type                       = "CustomScriptExtension"
+  type_handler_version       = "1.10"
+  auto_upgrade_minor_version = true
+
+  settings = <<SETTINGS
+    {
+      "fileUris": [
+          "${var.template_base_url}artifacts/deploy-cloudshop-db.ps1"
+      ],
+      "commandToExecute": "powershell.exe -ExecutionPolicy Bypass -File deploy-cloudshop-db.ps1 -dbsource ${var.cloudshopdburl} -sqlconfigurl ${var.cloudshopsqlconfig}"
+    }
+SETTINGS
+}
+
 ####################################### NIC DIAGNOSTIC SETTINGS #######################################
 
 # Use this data source to fetch all available log and metrics categories. We then enable all of them
@@ -98,7 +116,15 @@ resource "azurerm_monitor_diagnostic_setting" "compute" {
 variable "log_analytics_workspace_id" {}
 
 variable "asg_datatier_id" {}
-
+variable "template_base_url" {
+  default = "https://raw.githubusercontent.com/YRollHid/Azure-Networking-Lab-Accelerator/main/Scenarios/Enterprise-Class/"
+}
+variable "cloudshopdburl" {
+  default = "https://cloudworkshop.blob.core.windows.net/shared/AdventureWorks2012.bak"
+}
+variable "cloudshopsqlconfig" {
+  default = "https://raw.githubusercontent.com/YRollHid/Azure-Networking-Lab-Accelerator/main/Scenarios/Enterprise-Class/artifacts/configure-sql.ps1"
+}
 variable "admin_username" {
   default = "sysadmin"
 }
