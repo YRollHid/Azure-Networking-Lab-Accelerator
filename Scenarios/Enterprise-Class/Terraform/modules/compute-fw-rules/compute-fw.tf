@@ -30,7 +30,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
         type = "Https"
         port = 443
       }
-      source_addresses = ["192.168.1.0/24", "172.16.1.0/24"]
+      source_addresses = ["192.168.1.0/24","10.8.0.0/25","10.8.1.0/25"]
       web_categories   = ["computersandtechnology"]
     }
   }
