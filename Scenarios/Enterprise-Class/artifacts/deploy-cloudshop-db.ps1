@@ -26,6 +26,7 @@ $credential = New-Object System.Management.Automation.PSCredential("$env:COMPUTE
 
 Enable-PSRemoting -force
 Set-NetFirewallRule -Name "WINRM-HTTP-In-TCP-PUBLIC" -RemoteAddress Any
+winrm quickconfig -quiet
 Invoke-Command -FilePath $destinationPath -Credential $credential -ComputerName $env:COMPUTERNAME -ArgumentList "Password", $password
 Disable-PSRemoting -Force
 
