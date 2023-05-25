@@ -32,6 +32,7 @@ module "firewall_rules_vm" {
   resource_group_name   = azurerm_resource_group.rg.name
   location              = azurerm_resource_group.rg.location
   hub_prefix            = var.hub_prefix
+  az_fw_pip             = azurerm_public_ip.firewall.ip_address 
   ipgrp_deny_hub_lab_id = azurerm_ip_group.ipgrp_deny.id
 
 }

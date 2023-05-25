@@ -17,7 +17,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
   firewall_policy_id = azurerm_firewall_policy.compute.id
   priority           = 200
   application_rule_collection {
-    name     = "Web_Categories_Rules"
+    name     = "WebCategoriesRules1"
     priority = 205
     action   = "Allow"
     rule {
@@ -36,7 +36,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
   }
 
   network_rule_collection {
-    name     = "Deny_Traffic"
+    name     = "NetworkRuleCollectionDeny1"
     priority = 200
     action   = "Deny"
     rule {
@@ -50,7 +50,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
   }
 
   network_rule_collection {
-    name     = "VNET_Access"
+    name     = "NetworkRuleCollectionAllow1"
     priority = 210
     action   = "Allow"
     rule {
@@ -63,19 +63,20 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
 
   }
 
-  # network_rule_collection {
-  #   name     = "DataTier_Access"
-  #   priority = 220
-  #   action   = "Allow"
-  #   rule {
-  #     name                  = "AllowMSSQL"
-  #     protocols             = ["TCP"]
-  #     source_addresses      = ["10.8.0.0/25"]
-  #     destination_addresses = ["10.8.1.0/25"]
-  #     destination_ports     = ["1433"]
-  #   }
-
-  # }
+  nat_rule_collection {
+    name     = "NATRuleCollection1"
+    priority = 250
+    action   = "Dnat"
+    rule {
+      name                = "IncomingHTTP"
+      protocols           = ["TCP"]
+      source_addresses    = ["*"]
+      destination_address = var.az_fw_pip
+      destination_ports   = ["80"]
+      translated_address  = "10.8.0.100"
+      translated_port     = "80"
+    }
+  }
 
 }
 
@@ -84,5 +85,7 @@ variable "resource_group_name" {}
 variable "location" {}
 
 variable "hub_prefix" {}
+
+variable "az_fw_pip" {}
 
 variable "ipgrp_deny_hub_lab_id" {}
