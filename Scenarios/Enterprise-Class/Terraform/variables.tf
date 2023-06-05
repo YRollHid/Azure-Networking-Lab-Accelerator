@@ -31,6 +31,11 @@ variable "sku_tier" {
   default = "Standard"
 }
 
+variable "active_active" {
+  default = true
+}
+
+
 ## Sensitive Variables for the Jumpbox
 ## Sample terraform.tfvars File
 

@@ -48,6 +48,63 @@ resource "azurerm_subnet" "management" {
 
 }
 
+resource "azurerm_public_ip" "hub-vpngw-pip1" {
+  name                                           = "vnet1gatewayIP1"
+  resource_group_name                            = azurerm_resource_group.rg.name
+  location                                       = var.location
+  allocation_method                              = "Dynamic"
+}
+
+resource "azurerm_public_ip" "hub-vpngw-pip2" {
+  name                                           = "vnet1gatewayIP2"
+  resource_group_name                            = azurerm_resource_group.rg.name
+  location                                       = var.location
+  allocation_method                              = "Dynamic"
+}
+
+resource "azurerm_virtual_network_gateway" "hub-vpngw" {
+  name                                           = "WGVHubGateway"
+  resource_group_name                            = azurerm_resource_group.rg.name
+  location                                       = var.location
+
+  type                                           = "Vpn"
+  vpn_type                                       = "RouteBased"
+
+  active_active                                  = var.active_active
+  enable_bgp                                     = false
+  sku                                            = "VpnGw1"
+
+  ip_configuration {
+    name                                         = "vnetGatewayConfig"
+    public_ip_address_id                         = azurerm_public_ip.hub-vpngw-pip1.id
+    private_ip_address_allocation                = "Dynamic"
+    subnet_id                                    = azurerm_subnet.hub-gateway.id
+  }
+
+ dynamic "ip_configuration" {
+    for_each = var.active_active ? [true] : []
+    content {
+      name                          = "vnetGatewayConfigSecondary"
+      public_ip_address_id          = azurerm_public_ip.hub-vpngw-pip2.id
+      private_ip_address_allocation = "Dynamic"
+      subnet_id                     = azurerm_subnet.hub-gateway.id
+    }
+  }
+  
+}
+
+resource "azurerm_virtual_network_gateway_connection" "eastus2_to_westus3" {
+  name                                           = "OnPremWGGateway-to-WGVNet1" 
+  resource_group_name                            = azurerm_resource_group.rg.name
+  location                                       = var.location
+
+  type                                           = "Vnet2Vnet"
+  virtual_network_gateway_id                     = azurerm_virtual_network_gateway.hub-vpngw.id
+  peer_virtual_network_gateway_id                = azurerm_virtual_network_gateway.onprem-vpngw.id
+
+  shared_key                                     = "4-v3ry-53cr37-1p53c-5h4r3d-k3y"  
+}
+
 # Azure Virtual Network peering between Virtual Network Hub and OnPrem
 # resource "azurerm_virtual_network_peering" "peer_hub2onpremSpoke" {
 #     name = "peer-vnet-hub-2-onprem"
