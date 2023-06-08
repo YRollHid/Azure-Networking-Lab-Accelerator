@@ -43,7 +43,7 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
       name      = "BlockPortScanners"
       protocols = ["Any"]
       source_ip_groups      = [var.ipgrp_deny_hub_lab_id]
-      destination_addresses = ["172.16.1.0/24"]
+      destination_addresses = ["10.8.0.0/20"]
       destination_ports     = ["*"]
     }
 
@@ -56,8 +56,8 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
     rule {
       name                  = "AllowAll"
       protocols             = ["Any"]
-      source_addresses      = ["192.168.1.0/24"]
-      destination_addresses = ["172.16.1.0/24"]
+      source_addresses      = ["192.168.0.0/24"]
+      destination_addresses = ["10.8.0.0/25"]
       destination_ports     = ["*"]
     }
 

@@ -102,7 +102,10 @@ module "create_WGWEB1" {
   server_name    = "WGWEB1"
   admin_username = var.server_admin_username
   admin_password = var.server_admin_password
-  
+
+  # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
+  # hence the CustomScript could failed if the AzFw is not up & running.
+  depends_on = [ module.firewall_rules_vm ] 
 
 }
 
@@ -121,7 +124,10 @@ module "create_WGWEB2" {
   server_name    = "WGWEB2"
   admin_username = var.server_admin_username
   admin_password = var.server_admin_password
-  
+
+  # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
+  # hence the CustomScript could failed if the AzFw is not up & running.
+  depends_on = [ module.firewall_rules_vm ] 
 
 }
 
@@ -136,10 +142,13 @@ module "create_WGSQL1" {
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
   asg_datatier_id     = azurerm_application_security_group.datatier.id
 
-
   server_name    = "WGSQL1"
   admin_username = var.server_admin_username
   admin_password = var.server_admin_password
+
+  # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
+  # hence the CustomScript could failed if the AzFw is not up & running.
+  depends_on = [ module.firewall_rules_vm ]
 
 }
 
