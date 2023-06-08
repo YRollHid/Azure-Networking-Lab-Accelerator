@@ -49,6 +49,20 @@ resource "azurerm_firewall_policy_rule_collection_group" "compute" {
 
   }
 
+  network_rule_collection {
+    name     = "NetworkRuleCollectionAllow1"
+    priority = 210
+    action   = "Allow"
+    rule {
+      name                  = "AllowAll"
+      protocols             = ["Any"]
+      source_addresses      = ["10.8.0.0/25"]
+      destination_addresses = ["192.168.0.0/24"]
+      destination_ports     = ["*"]
+    }
+
+  }
+
   nat_rule_collection {
     name     = "NATRuleCollection1"
     priority = 250
