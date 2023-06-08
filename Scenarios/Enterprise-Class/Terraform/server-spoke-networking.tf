@@ -79,6 +79,12 @@ resource "azurerm_route_table" "server_route_table" {
     next_hop_type          = "VirtualAppliance"
     next_hop_in_ip_address = "10.7.1.4"
   }
+  route {
+    name                   = "ServerToOnPrem"
+    address_prefix         = "192.168.0.0/24"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.7.1.4"
+  }
 
 }
 
