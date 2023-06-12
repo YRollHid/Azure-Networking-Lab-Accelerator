@@ -48,22 +48,22 @@ resource "azurerm_subnet" "management" {
 
 }
 
-resource "azurerm_public_ip" "hub-vpngw-pip1" {
-  name                                           = "vnet1gatewayIP1"
+resource "azurerm_public_ip" "pip1-hub-vpngw" {
+  name                                           = "pip1-vpngw-${var.hub_prefix}"
   resource_group_name                            = azurerm_resource_group.rg.name
   location                                       = var.location
   allocation_method                              = "Dynamic"
 }
 
-resource "azurerm_public_ip" "hub-vpngw-pip2" {
-  name                                           = "vnet1gatewayIP2"
+resource "azurerm_public_ip" "pip2-hub-vpngw" {
+  name                                           = "pip2-vpngw-${var.hub_prefix}"
   resource_group_name                            = azurerm_resource_group.rg.name
   location                                       = var.location
   allocation_method                              = "Dynamic"
 }
 
 resource "azurerm_virtual_network_gateway" "hub-vpngw" {
-  name                                           = "WGVHubGateway"
+  name                                           = "vpngw-${var.hub_prefix}"
   resource_group_name                            = azurerm_resource_group.rg.name
   location                                       = var.location
 
@@ -76,7 +76,7 @@ resource "azurerm_virtual_network_gateway" "hub-vpngw" {
 
   ip_configuration {
     name                                         = "vnetGatewayConfig"
-    public_ip_address_id                         = azurerm_public_ip.hub-vpngw-pip1.id
+    public_ip_address_id                         = azurerm_public_ip.pip1-hub-vpngw.id
     private_ip_address_allocation                = "Dynamic"
     subnet_id                                    = azurerm_subnet.hub-gateway.id
   }
@@ -85,7 +85,7 @@ resource "azurerm_virtual_network_gateway" "hub-vpngw" {
     for_each = var.active_active ? [true] : []
     content {
       name                          = "vnetGatewayConfigSecondary"
-      public_ip_address_id          = azurerm_public_ip.hub-vpngw-pip2.id
+      public_ip_address_id          = azurerm_public_ip.pip2-hub-vpngw.id
       private_ip_address_allocation = "Dynamic"
       subnet_id                     = azurerm_subnet.hub-gateway.id
     }

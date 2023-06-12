@@ -37,22 +37,22 @@ resource "azurerm_subnet" "onprem-gateway" {
 
 }
 
-resource "azurerm_public_ip" "onprem-vpngw-pip1" {
-  name                                           = "onpremgatewayIP1"
+resource "azurerm_public_ip" "pip1-onprem-vpngw" {
+  name                                           = "pip1-vpngw-${var.onprem_prefix}"
   resource_group_name                            = azurerm_resource_group.onprem-spoke-rg.name
   location                                       = azurerm_resource_group.onprem-spoke-rg.location
   allocation_method = "Dynamic"
 }
 
-resource "azurerm_public_ip" "onprem-vpngw-pip2" {
-  name                                           = "onpremgatewayIP2"
+resource "azurerm_public_ip" "pip2-onprem-vpngw" {
+  name                                           = "pip2-vpngw-${var.onprem_prefix}"
   resource_group_name                            = azurerm_resource_group.onprem-spoke-rg.name
   location                                       = azurerm_resource_group.onprem-spoke-rg.location
   allocation_method = "Dynamic"
 }
 
 resource "azurerm_virtual_network_gateway" "onprem-vpngw" {
-  name                                           = "OnPremWGGateway"
+  name                                           = "vpngw-${var.onprem_prefix}"
   resource_group_name                            = azurerm_resource_group.onprem-spoke-rg.name
   location                                       = azurerm_resource_group.onprem-spoke-rg.location
 
@@ -65,7 +65,7 @@ resource "azurerm_virtual_network_gateway" "onprem-vpngw" {
 
   ip_configuration {
     name                                         = "vnetGatewayConfig"
-    public_ip_address_id                         = azurerm_public_ip.onprem-vpngw-pip1.id
+    public_ip_address_id                         = azurerm_public_ip.pip1-onprem-vpngw.id
     private_ip_address_allocation                = "Dynamic"
     subnet_id                                    = azurerm_subnet.onprem-gateway.id
   }
@@ -74,7 +74,7 @@ resource "azurerm_virtual_network_gateway" "onprem-vpngw" {
     for_each = var.active_active ? [true] : []
     content {
       name                                       = "vnetGatewayConfigSecondary"
-      public_ip_address_id                       = azurerm_public_ip.onprem-vpngw-pip2.id
+      public_ip_address_id                       = azurerm_public_ip.pip2-onprem-vpngw.id
       private_ip_address_allocation              = "Dynamic"
       subnet_id                                  = azurerm_subnet.onprem-gateway.id
     }
