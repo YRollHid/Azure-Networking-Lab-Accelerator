@@ -1,6 +1,6 @@
 # Resource-1: Create Azure Standard Load Balancer
 resource "azurerm_lb" "app_lb" {
-  name                = "WGWEBLB"
+  name                = "	lbi-app-${var.server_prefix}"
   resource_group_name = azurerm_resource_group.server-spoke-rg.name
   location            = azurerm_resource_group.rg.location
   sku = "Standard"

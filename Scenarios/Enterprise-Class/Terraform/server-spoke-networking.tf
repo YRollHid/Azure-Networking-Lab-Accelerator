@@ -15,14 +15,14 @@ resource "azurerm_virtual_network" "server" {
 # Manages an Application Security Group
 #
 resource "azurerm_application_security_group" "webtier" {
-  name                = "WebTier"
+  name                = "webtier"
   resource_group_name = azurerm_resource_group.server-spoke-rg.name
   location            = var.location
 
 }
 
 resource "azurerm_application_security_group" "datatier" {
-  name                = "DataTier"
+  name                = "datatier"
   resource_group_name = azurerm_resource_group.server-spoke-rg.name
   location            = var.location
 

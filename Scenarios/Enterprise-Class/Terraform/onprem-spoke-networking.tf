@@ -83,7 +83,7 @@ resource "azurerm_virtual_network_gateway" "onprem-vpngw" {
 }
 
 resource "azurerm_virtual_network_gateway_connection" "westus3_to_eastus2" {
-  name                                           = "WGVNet1-to-OnPremWGGateway" 
+  name                                           = "con-hub-${var.onprem_prefix}" 
   resource_group_name                            = azurerm_resource_group.onprem-spoke-rg.name
   location                                       = azurerm_resource_group.onprem-spoke-rg.location
 
