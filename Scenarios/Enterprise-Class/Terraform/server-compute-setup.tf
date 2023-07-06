@@ -105,7 +105,7 @@ module "create_WGWEB1" {
 
   # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
   # hence the CustomScript could failed if the AzFw is not up & running.
-  depends_on = [ module.firewall_rules_vm ] 
+  depends_on = [ azurerm_firewall.firewall, module.firewall_rules_vm ] 
 
 }
 
@@ -127,7 +127,7 @@ module "create_WGWEB2" {
 
   # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
   # hence the CustomScript could failed if the AzFw is not up & running.
-  depends_on = [ module.firewall_rules_vm ] 
+  depends_on = [ azurerm_firewall.firewall, module.firewall_rules_vm ] 
 
 }
 
@@ -148,7 +148,7 @@ module "create_WGSQL1" {
 
   # This dependency is neccesary as the vm tcp/udp traffic is getting filtering by AzFirewall,
   # hence the CustomScript could failed if the AzFw is not up & running.
-  depends_on = [ module.firewall_rules_vm ]
+  depends_on = [ azurerm_firewall.firewall, module.firewall_rules_vm ]
 
 }
 

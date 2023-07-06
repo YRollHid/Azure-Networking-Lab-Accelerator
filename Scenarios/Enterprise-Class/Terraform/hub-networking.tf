@@ -123,6 +123,9 @@ resource "azurerm_virtual_network_peering" "peer_hub2serverSpoke" {
   remote_virtual_network_id    = azurerm_virtual_network.server.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  allow_gateway_transit        = true
+
+  depends_on = [azurerm_virtual_network.hub, azurerm_virtual_network.server, azurerm_virtual_network_gateway.hub-vpngw]
 }
 
 # Bastion - Module creates additional subnet (without NSG), public IP and Bastion

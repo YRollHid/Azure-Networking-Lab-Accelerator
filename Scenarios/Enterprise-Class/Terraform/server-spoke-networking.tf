@@ -61,8 +61,9 @@ resource "azurerm_virtual_network_peering" "peer_serverSpoke2hub" {
   remote_virtual_network_id    = azurerm_virtual_network.hub.id
   allow_virtual_network_access = true
   allow_forwarded_traffic      = true
+  use_remote_gateways          = true
 
-  depends_on = [azurerm_virtual_network_peering.peer_hub2serverSpoke]
+  depends_on = [azurerm_virtual_network.server, azurerm_virtual_network.hub, azurerm_virtual_network_gateway.hub-vpngw, azurerm_virtual_network_peering.peer_hub2serverSpoke]
 }
 
 # # Create Route Table for Client Spoke
