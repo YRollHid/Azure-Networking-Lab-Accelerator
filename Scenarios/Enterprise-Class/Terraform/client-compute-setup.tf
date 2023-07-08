@@ -25,7 +25,7 @@ module "create_kaliclient" {
   vnet_subnet_id      = azurerm_subnet.onprem-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
 
-  server_name    = "client-linux"
+  server_name    = "CLIENT-LINUX"
   admin_username = var.client_admin_username
   admin_password = var.client_admin_password
 
@@ -41,7 +41,7 @@ module "create_win10client" {
   vnet_subnet_id      = azurerm_subnet.onprem-spoke.id
   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
 
-  server_name    = "client-win10"
+  server_name    = "CLIENT-WIN10"
   admin_username = var.client_admin_username
   admin_password = var.client_admin_password
 
