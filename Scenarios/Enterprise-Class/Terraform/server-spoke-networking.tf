@@ -72,7 +72,7 @@ resource "azurerm_route_table" "server_route_table" {
   name                          = "rt-${var.server_prefix}"
   resource_group_name           = azurerm_resource_group.server-spoke-rg.name
   location                      = var.location
-  disable_bgp_route_propagation = false
+  disable_bgp_route_propagation = true
 
   route {
     name                   = "AppToInternet"
