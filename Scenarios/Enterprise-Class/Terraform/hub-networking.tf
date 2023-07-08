@@ -128,6 +128,30 @@ resource "azurerm_virtual_network_peering" "peer_hub2serverSpoke" {
   depends_on = [azurerm_virtual_network.hub, azurerm_virtual_network.server, azurerm_virtual_network_gateway.hub-vpngw]
 }
 
+# # Create Route Table for Hub
+# (Gateway subnet in the Hub will need to connect to this Route Table)
+# When packets arrive from the simulated 'on-premises' Virtual Network (OnPremVNet) to the 'Azure-side' (vnet-hub-wgv-lab), 
+# they arrive at the gateway vpngw-hub-wgv-lab. This gateway is in a gateway subnet (10.7.0.0/27). For packets to be directed to the Azure firewall, 
+# We need another route table and route to be associated with the gateway subnet on the 'Azure-side
+resource "azurerm_route_table" "hub_route_table" {
+  name                          = "rt-${var.hub_prefix}"
+  resource_group_name           = azurerm_resource_group.rg.name
+  location                      = var.location
+  disable_bgp_route_propagation = false
+
+  route {
+    name                   = "OnPremToAppSubnet"
+    address_prefix         = "10.8.0.0/25"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.7.1.4"
+  }
+}
+# # Associate Route Table to Server Spoke Subnet
+resource "azurerm_subnet_route_table_association" "hubvpngw_rt_association" {
+  subnet_id      = azurerm_subnet.hub-gateway.id
+  route_table_id = azurerm_route_table.hub_route_table.id
+}
+
 # Bastion - Module creates additional subnet (without NSG), public IP and Bastion
 module "bastion" {
   source = "./modules/bastion"
