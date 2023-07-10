@@ -21,3 +21,9 @@ resource "azurerm_storage_account" "monitoring-sto" {
   tags = var.tags
     
 }
+
+resource "azurerm_network_watcher" "monitoring-nwwatcher" {
+  name                = "nwwatcher-wgv-lab"
+  location            = azurerm_resource_group.rg.location
+  resource_group_name = azurerm_resource_group.rg.name
+}
