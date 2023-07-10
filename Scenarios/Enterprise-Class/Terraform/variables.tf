@@ -19,6 +19,7 @@ variable "tags" {
 variable "hub_prefix" {}
 variable "onprem_prefix" {}
 variable "server_prefix" {}
+variable "monitoring_prefix" {}
 
 variable "ipgroup_deny_prefix" {}
 

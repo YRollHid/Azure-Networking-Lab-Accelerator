@@ -27,6 +27,15 @@ resource "azurerm_resource_group" "server-spoke-rg" {
   location = var.location
 }
 
+# Resource Group for Monitoring via Network Watcher
+# ----------------------
+
+resource "azurerm_resource_group" "monitoring-rg" {
+  name     = "rg-${var.monitoring_prefix}"
+  location = var.location
+}
+
+
 #############
 ## OUTPUTS ##
 #############

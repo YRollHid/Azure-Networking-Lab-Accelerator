@@ -10,3 +10,4 @@ resource "azurerm_log_analytics_workspace" "monitoring" {
 
   tags = var.tags
 }
+
