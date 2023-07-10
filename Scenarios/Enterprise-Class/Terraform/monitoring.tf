@@ -28,7 +28,7 @@ resource "azurerm_network_watcher" "monitoring-nwwatcher" {
   resource_group_name = azurerm_resource_group.rg.name
 }
 
-resource "azurerm_network_watcher_flow_log" "monitoring-nwwatcher-flow-log" {
+resource "azurerm_network_watcher_flow_log" "monitoring-nwwatcher-appflow-log" {
   network_watcher_name = azurerm_network_watcher.monitoring-nwwatcher.name
   resource_group_name  = azurerm_resource_group.monitoring-rg.name
   name                 = "app-log"
