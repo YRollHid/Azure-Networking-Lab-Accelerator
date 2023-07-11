@@ -40,3 +40,46 @@ resource "azurerm_lb_rule" "app_lb_rule_app" {
   probe_id                       = azurerm_lb_probe.app_lb_probe.id
   loadbalancer_id                = azurerm_lb.app_lb.id
 }
+
+####################################### LB DIAGNOSTIC SETTINGS #######################################
+
+# Use this data source to fetch all available log and metrics categories. We then enable all of them
+data "azurerm_monitor_diagnostic_categories" "lb" {
+  resource_id = azurerm_lb.app_lb.id
+}
+
+ resource "azurerm_monitor_diagnostic_setting" "lb" {
+   name                       = "lbladiagnostics"
+   target_resource_id         = azurerm_lb.app_lb.id
+   log_analytics_workspace_id = azurerm_log_analytics_workspace.monitoring.id
+
+  dynamic "log" {
+     iterator = entry
+     for_each = data.azurerm_monitor_diagnostic_categories.lb.logs
+
+     content {
+       category = entry.value
+       enabled  = true
+
+       retention_policy {
+         enabled = true
+         days    = 30
+       }
+     }
+   }
+
+   dynamic "metric" {
+     iterator = entry
+     for_each = data.azurerm_monitor_diagnostic_categories.lb.metrics
+
+     content {
+       category = entry.value
+       enabled  = true
+
+       retention_policy {
+         enabled = true
+         days    = 30
+       }
+     }
+   }
+ }
