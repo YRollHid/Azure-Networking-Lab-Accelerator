@@ -11,6 +11,7 @@ resource "azurerm_log_analytics_workspace" "monitoring" {
   tags = var.tags
 }
 
+# Adding an Azure Storage Account for storing monitoring data
 resource "azurerm_storage_account" "monitoring-sto00" {
   name                     = "sto00netwatcherwgvlab"
   resource_group_name      = azurerm_resource_group.monitoring-rg.name
@@ -22,6 +23,7 @@ resource "azurerm_storage_account" "monitoring-sto00" {
     
 }
 
+# Adding an Azure Storage Account for storing monitoring data
 resource "azurerm_storage_account" "monitoring-sto01" {
   name                     = "sto01netwatcherwgvlab"
   resource_group_name      = azurerm_resource_group.monitoring-rg.name
@@ -33,18 +35,22 @@ resource "azurerm_storage_account" "monitoring-sto01" {
     
 }
 
+# Adding an Azure Network Watchers are created for monitoring network traffic
 resource "azurerm_network_watcher" "monitoring-nwwatcher-eastus3" {
   name                = "nwwatcher-wgv-lab-eastus3"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.monitoring-rg.name
 }
 
+# Adding an Azure Network Watchers are created for monitoring network traffic
 resource "azurerm_network_watcher" "monitoring-nwwatcher-westus3" {
   name                = "nwwatcher-wgv-lab-westus3"
   location            = azurerm_resource_group.onprem-spoke-rg.location
   resource_group_name = azurerm_resource_group.monitoring-rg.name
 }
 
+# Adding an Azure Network Watcher Flow Logs for logging network traffic.
+# Each flow log is associated with a network watcher, resource group, and storage account
 resource "azurerm_network_watcher_flow_log" "monitoring-nwwatcher-appflow-log" {
   network_watcher_name = azurerm_network_watcher.monitoring-nwwatcher-eastus3.name
   resource_group_name  = azurerm_resource_group.monitoring-rg.name
@@ -69,6 +75,8 @@ resource "azurerm_network_watcher_flow_log" "monitoring-nwwatcher-appflow-log" {
   }
 }
 
+# Adding an Azure Network Watcher Flow Logs for logging network traffic.
+# Each flow log is associated with a network watcher, resource group, and storage account
 resource "azurerm_network_watcher_flow_log" "monitoring-nwwatcher-onpremflow-log" {
   network_watcher_name = azurerm_network_watcher.monitoring-nwwatcher-westus3.name
   resource_group_name  = azurerm_resource_group.monitoring-rg.name
