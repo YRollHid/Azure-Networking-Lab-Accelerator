@@ -96,6 +96,8 @@ resource "azurerm_virtual_machine_extension" "region1-vm01-vmsetup" {
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.9"
+  
+  depends_on = [ azurerm_route_table.region1-route-table, azurerm_firewall.region1-azfw, azurerm_firewall_policy.fw-pol01 ]
 
   protected_settings = <<PROTECTED_SETTINGS
     {
@@ -117,6 +119,8 @@ resource "azurerm_virtual_machine_extension" "region2-vm01-vmsetup" {
   publisher            = "Microsoft.Compute"
   type                 = "CustomScriptExtension"
   type_handler_version = "1.9"
+
+  depends_on = [ azurerm_route_table.region2-route-table, azurerm_firewall.region2-azfw, azurerm_firewall_policy.fw-pol01 ]
 
   protected_settings = <<PROTECTED_SETTINGS
     {

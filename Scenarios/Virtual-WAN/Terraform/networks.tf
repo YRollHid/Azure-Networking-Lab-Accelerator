@@ -21,6 +21,23 @@ resource "azurerm_subnet" "region1-bastion-snet" {
   virtual_network_name = azurerm_virtual_network.region1-vnet1.name
   address_prefixes     = [var.region1-vnet1-bastion-snet-range]
 }
+resource "azurerm_route_table" "region1-route-table" {
+  name                          = "${var.region1}-rt-01"
+  location                      = var.region1 
+  resource_group_name           = azurerm_resource_group.region1-rg1.name
+  disable_bgp_route_propagation = false
+
+  route {
+    name                   = "region1ToInternet"
+    address_prefix         = "0.0.0.0/0"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.10.2.4"
+  }
+}
+resource "azurerm_subnet_route_table_association" "region1-rt-association" {
+  subnet_id      = azurerm_subnet.region1-vnet1-snet1.id
+  route_table_id = azurerm_route_table.region1-route-table.id
+}
 # Region 2 VNET 1
 resource "azurerm_virtual_network" "region2-vnet1" {
   name                = "${var.region2}-vnet-01"
@@ -42,6 +59,23 @@ resource "azurerm_subnet" "region2-bastion-snet" {
   resource_group_name  = azurerm_resource_group.region2-rg1.name
   virtual_network_name = azurerm_virtual_network.region2-vnet1.name
   address_prefixes     = [var.region2-vnet1-bastion-snet-range]
+}
+resource "azurerm_route_table" "region2-route-table" {
+  name                          = "${var.region2}-rt-01"
+  location                      = var.region2 
+  resource_group_name           = azurerm_resource_group.region2-rg1.name
+  disable_bgp_route_propagation = false
+
+  route {
+    name                   = "region2ToInternet"
+    address_prefix         = "0.0.0.0/0"
+    next_hop_type          = "VirtualAppliance"
+    next_hop_in_ip_address = "10.20.2.4"
+  }
+}
+resource "azurerm_subnet_route_table_association" "region2-rt-association" {
+  subnet_id      = azurerm_subnet.region2-vnet1-snet1.id
+  route_table_id = azurerm_route_table.region2-route-table.id
 }
 # NSGs
 #Lab NSG
